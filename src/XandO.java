@@ -171,4 +171,49 @@ public class XandO {
             restartGame();
         }
     }
+    void highlightWinner(JButton b1, JButton b2, JButton b3) {
+        Color winColor = new Color(0, 128, 0); // Dark green
+        b1.setBackground(winColor);
+        b2.setBackground(winColor);
+        b3.setBackground(winColor);
+        b1.setForeground(Color.WHITE);
+        b2.setForeground(Color.WHITE);
+        b3.setForeground(Color.WHITE);
+    }
+
+    void showWinner(String winner) {
+        gameOver = true;
+        if (winner.equals(player1Name)) player1Score++;
+        else if (winner.equals(player2Name)) player2Score++;
+
+        JOptionPane.showMessageDialog(gameFrame, winner + " Wins!", "Game Over", JOptionPane.INFORMATION_MESSAGE);
+        restartGame();
+    }
+
+    void restartGame() {
+        int response = JOptionPane.showConfirmDialog(gameFrame, "Do you want to play again?", "Restart", JOptionPane.YES_NO_OPTION);
+        if (response == JOptionPane.YES_OPTION) {
+            turns = 0;
+            gameOver = false;
+            currentPlayer = player1Name;
+            statusLabel.setText(currentPlayer + "'s Turn");
+            scoreLabel.setText(getScoreText());
+
+            for (int r = 0; r < 3; r++) {
+                for (int c = 0; c < 3; c++) {
+                    board[r][c].setText("");
+                    board[r][c].setBackground(new Color(100, 149, 237));
+                    board[r][c].setForeground(Color.WHITE);
+                }
+            }
+        } else {
+            System.exit(0);
+        }
+    }
+
+    String getScoreText() {
+        return player1Name + " (X): " + player1Score + "  |  " + player2Name + " (O): " + player2Score;
+    }
+}
+
 
