@@ -99,3 +99,76 @@ public class XandO {
         JPanel boardPanel = new JPanel(new GridLayout(3, 3));
         boardPanel.setBackground(new Color(200, 200, 255));
         gameFrame.add(boardPanel, BorderLayout.CENTER);
+        for (int r = 0; r < 3; r++) {
+            for (int c = 0; c < 3; c++) {
+                JButton button = new JButton();
+                board[r][c] = button;
+                button.setFont(new Font("Arial", Font.BOLD, 120));
+                button.setFocusable(false);
+                button.setBackground(new Color(100, 149, 237)); // Cornflower Blue
+                button.setForeground(Color.WHITE);
+
+                final int row = r, col = c;
+                button.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        if (gameOver || !button.getText().equals("")) return;
+
+                        button.setText(currentPlayer.equals(player1Name) ? "X" : "O");
+                        button.setForeground(Color.WHITE);
+                        turns++;
+                        checkWinner();
+
+                        if (!gameOver) {
+                            currentPlayer = currentPlayer.equals(player1Name) ? player2Name : player1Name;
+                            statusLabel.setText(currentPlayer + "'s Turn");
+                        }
+                    }
+                });
+
+                boardPanel.add(button);
+            }
+        }
+
+        gameFrame.setVisible(true);
+    }
+
+    void checkWinner() {
+        for (int i = 0; i < 3; i++) {
+            if (!board[i][0].getText().equals("") &&
+                    board[i][0].getText().equals(board[i][1].getText()) &&
+                    board[i][1].getText().equals(board[i][2].getText())) {
+                highlightWinner(board[i][0], board[i][1], board[i][2]);
+                showWinner(currentPlayer);
+                return;
+            }
+            if (!board[0][i].getText().equals("") &&
+                    board[0][i].getText().equals(board[1][i].getText()) &&
+                    board[1][i].getText().equals(board[2][i].getText())) {
+                highlightWinner(board[0][i], board[1][i], board[2][i]);
+                showWinner(currentPlayer);
+                return;
+            }
+        }
+
+        if (!board[0][0].getText().equals("") &&
+                board[0][0].getText().equals(board[1][1].getText()) &&
+                board[1][1].getText().equals(board[2][2].getText())) {
+            highlightWinner(board[0][0], board[1][1], board[2][2]);
+            showWinner(currentPlayer);
+            return;
+        }
+
+        if (!board[0][2].getText().equals("") &&
+                board[0][2].getText().equals(board[1][1].getText()) &&
+                board[1][1].getText().equals(board[2][0].getText())) {
+            highlightWinner(board[0][2], board[1][1], board[2][0]);
+            showWinner(currentPlayer);
+            return;
+        }
+
+        if (turns == 9) {
+            JOptionPane.showMessageDialog(gameFrame, "It's a Tie!", "Game Over", JOptionPane.INFORMATION_MESSAGE);
+            restartGame();
+        }
+    }
+
